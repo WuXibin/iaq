@@ -1,0 +1,135 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> <title>室内生态-MICL</title>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" media="all" href="/static/css/fancybox.css">
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.fancybox.js?v=2.1.5"></script>
+<script>
+$(document).ready(function() { 
+	$.get("/iaq/nodes",function(data){
+        data=$.parseJSON(data);   
+        $.each(data.nodes, function(i, item) {  
+            $("#datagrid").append(  
+                    "<tr><td>"+item.id+"</td>" +   
+                    "<td>" + item.node_id    + "</td>" +
+					"<td name=\"description\"><input class=\"input_desc\" type=\"text\" readonly=\"readonly\" value=\"" + item.description    + "\"></input></td>" +
+                "<td><button class=\"delete_button\">删除</button><button class=\"edit_button\">编辑</button>\
+                  <button class=\"save_button\">保存</button></td></tr>");  
+        });
+		$(".delete_button").click(function(){
+            //var nodeId = $(this).closest("tr").find("td[name='node_id']").val();  $(this).closest("tr").find("input[name='sid']").val()
+            //alert(nodeId);
+            var row = $(this).closest("tr").children("td");
+            var node_id = row.eq(1).text();
+            $.ajax({
+                type:'DELETE',
+                url:'/iaq/nodes/'+node_id,
+				success: function(result) {
+					alert("删除成功，点击确定自动刷新");
+					window.location.reload();
+				}
+            }); 
+	    });
+		$(".edit_button").click(function() {
+            var row = $(this).closest("tr").children("td");
+            row.eq(3).find(".edit_button").css("display","none");
+            row.eq(3).find(".save_button").css("display","inline");
+			$('input').removeAttr("readonly");
+            $('input').focus();
+        });
+        $(".save_button").click(function() {
+            var row = $(this).closest("tr").children("td");
+			var node_id = row.eq(1).text();
+            var desc_new = row.eq(2).find("input").val();
+            var j = new Object();
+            j.node = {"description":desc_new};
+            var json = JSON.stringify(j);
+            $.ajax({
+                type:'PUT',
+                url:'/iaq/nodes/'+node_id,
+                data:json,
+				success: function() {
+					alert("提交成功，点击确定自动刷新");
+					window.location.reload();
+				}
+            });
+        });
+    });  
+    $(".add_button").fancybox();
+    $("#contact").submit(function() { return false; });
+});
+</script>
+</head>
+<body>
+<div id="div1" class="main"  width=auto >
+  <div class="header">
+    <div class="header_resize">
+        <div class="nav">
+            <a href="/iaq">首页&nbsp;</a>
+            <a href="data.html">&nbsp;数据查看&nbsp;</a>
+            <a href="nodes.html">&nbsp;设备管理&nbsp;</a>
+        </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="content_resize">
+      <div class="product_detail_right_nodes">
+          <div class="node_div"><img class="node_img" src="/static/img/node1.jpg" alt="nodes1" /></div>
+		  <div class="node_middle"><img class="node_img2" src="/static/img/node2.jpg" alt="nodes2" /></div>
+		  <div class="node_div"><img class="node_img" src="/static/img/node3.jpg" alt="nodes3" /></div>
+      </div>
+      <div class="product_detail_left">
+       <h3>空气质量监测</h3>
+          <table><tr><td><p>节点被放置于各个房间的不同位置，获取相关空气质量信息；<br/> 现有节点如下：</p></td>
+              <td><a id="add_node" class="add_button"  href="#inline">&nbsp;&nbsp;添&nbsp;加&nbsp;&nbsp;</a></td></tr>
+		  </table>
+       <div class="cleaner_h20"></div>
+       <div class="data_area">
+	    <table id="datagrid" class="data_table">
+            <thead><tr><th>ID</th><th>节点编号</th><th>节点说明</th><th>操作</th></tr></thead>
+		</table>
+	   </div>
+       <!-- <div class="button_01"><a href="nodes.html">刷 新</a></div> -->
+	  </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="footer" >
+    <div class="footer_resize">
+      <p class="lf">&copy; Copyright MICL.</p>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+    <!-- hidden inline form -->
+<div id="inline">
+<h3>添加新节点设备</h3>
+<form id="contact" action="#" method="post" name="contact">
+    <label for="node_id">节点编号</label>
+    <input id="node_id" class="txt" name="node_id" />
+    <br>
+    <label for="description">节点说明</label>
+    <textarea id="description" class="txtarea" name="description"></textarea>
+    <button id="send">确认添加</button></form>
+</div>
+<script>
+    $("#send").click(function(){
+        var nodeId  = $("#node_id").val();
+        var desc = $("#description").val();
+        $.ajax({
+            type:'POST',
+            url:'/iaq/nodes/',
+            data:{node_id:nodeId,description:desc},
+            success: function(){
+				window.location.reload();
+                }
+            }); 
+    });
+</script>
+</body>
+</html>

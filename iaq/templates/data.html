@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> <title>室内生态-MICL</title>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/js/jquery.min.js">
+</script>
+<script>
+$(document).ready(function() { 
+	$.get("/iaq/data",function(data){
+		data=$.parseJSON(data);
+        $.each(data.data, function(i, item) {  
+            $("#datagrid").append(  
+                "<tr><td><a href=\"histories.html?node_id="+item.node_id+"\">" + item.node_id + "</a></td>" +   
+                    "<td>" + item.temp    + "</td>" +
+					"<td>" + item.humi    + "</td>" +
+					"<td>" + item.iaqengine    + "</td>" +
+					"<td>" + item.tgs2600    + "</td>" +
+                    "<td>" + item.tgs2602 + "</td></tr>");  
+        });  
+        });  
+});
+</script>
+<script>
+    $(function(){ 
+    var w = $("#div1").width();//容器宽度 
+    $("#div1 img").each(function(){//如果有很多图片，我们可以使用each()遍历 
+        var img_w = $(this).width();//图片宽度 
+        var img_h = $(this).height();//图片高度 
+        if(img_w>w){//如果图片宽度超出容器宽度--要撑破了 
+            var height = (w*img_h)/img_w; //高度等比缩放 
+            $(this).css({"width":w,"height":height});//设置缩放后的宽度和高度 
+        } 
+    }); 
+});
+</script>
+</head>
+<body>
+<div id="div1" class="main"  width=auto >
+  <div class="header">
+    <div class="header_resize">
+        <div class="nav">
+            <a href="/iaq">首页&nbsp;</a>
+            <a href="data.html">&nbsp;数据查看&nbsp;</a>
+            <a href="nodes.html">&nbsp;设备管理&nbsp;</a>
+        </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="content_resize">
+      <div class="product_detail_right">
+          <div class="product_img_wrapper"><img src="http://miclustb.sinaapp.com/iaq/plot" alt="product" /></div>
+      </div>
+      <div class="product_detail_left">
+       <!-- <div class="cleaner_h50"></div>  -->
+       <h3>空气质量监测</h3>
+       <p>节点被放置于各个房间的不同位置，获取相关空气质量信息；<br/> 实时结果显示如下，并绘制于右图：</p>
+       <div class="cleaner_h20"></div>
+       <div class="data_area">
+	    <table id="datagrid" class="data_table">
+            <thead class="fixedHeader">
+            <tr> <th data-options="field:'node_id'">节点ID</th>
+			<th data-options="field:'temp'">温度</th>
+			<th data-options="field:'humi'">湿度</th>
+			<th data-options="field:'iaqengine'">IAQ</th>
+			<th data-options="field:'tgs2600'">TGS<br>2600</th>
+			<th data-options="field:'tgs2602'">TGS<br>2602</th> </tr>
+			</thead>
+		</table>
+	   </div>
+	  </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="footer" >
+    <div class="footer_resize">
+      <p class="lf">&copy; Copyright MICL.</p>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

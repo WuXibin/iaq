@@ -1,0 +1,124 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> <title>室内生态-MICL</title>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/js/jquery.min.js">
+</script>
+<script>
+$(document).ready(function() { 
+    var nodeID = {{ node_id }};
+    //var nodeID = $.url().param("node_id");
+    $.get("/iaq/data/"+nodeID+"/query?n=5",function(data){
+		data=$.parseJSON(data);   
+        $.each(data.data, function(i, item) {  
+            $("#datagrid").append(  
+                "<tr><td>" + item.temp    + "</td>" +
+					"<td>" + item.humi    + "</td>" +
+					"<td>" + item.iaqengine    + "</td>" +
+					"<td>" + item.tgs2600    + "</td>" +
+                    "<td>" + item.tgs2602 + "</td>" +
+                    "<td>" + item.time + "</td></tr>");  
+        }); 
+    });
+    $("#img_history").attr("src","/iaq/plot/"+nodeID+"/query?n=10");
+});
+</script>
+</head>
+<body>
+<div id="div1" class="main"  width=auto >
+  <div class="header">
+    <div class="header_resize">
+        <div class="nav">
+            <a href="/iaq">首页&nbsp;</a>
+            <a href="data.html">&nbsp;数据查看&nbsp;</a>
+            <a href="nodes.html">&nbsp;设备管理&nbsp;</a>
+        </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="content_resize">
+      <div class="product_detail_right">
+          <div class="product_img_wrapper">
+		  <img id= "img_history" src="" alt="product" />
+            <div class="cleaner_h30"></div>
+            <div class="select_div"><select id="plot-select">
+                <optgroup label="查看记录数"> 
+                <option>10</option>
+                <option>30</option>
+                <option>50</option>
+                <option>100</option>
+                </optgroup>
+              </select></div>
+		  </div>
+      </div>
+      <div class="product_detail_left">
+       <h3>空气质量监测</h3>
+	   <table><thead>
+              <tr><td><p>历史记录(节点编号-<b>{{node_id}}</b>)：</p></td>
+                  <td><div class="styled-select">
+                      <select id="data-select">
+                          <optgroup label="查看记录数"> 
+                          <option>5</option>
+                          <option>10</option>
+                          <option>30</option>
+                          <option>50</option>
+                          </optgroup>
+                      </select>
+                      </div></td></thead>
+          </table>
+       <div class="cleaner_h20"></div>
+       <div class="data_area">
+	    <table id="datagrid" class="data_table">
+            <thead class="fixedHeader">
+            <tr><th>温度</th><th>湿度</th><th>IAQ</th><th>TGS<br>2600</th><th>TGS<br>2602</th><th>时间</th> </tr>
+            </thead>
+		</table>
+	   </div>
+       <!-- <div class="button_01"><a href="nodes.html">刷 新</a></div> -->
+	  </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="footer" >
+    <div class="footer_resize">
+      <p class="lf">&copy; Copyright MICL.</p>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+<script>
+$( "#data-select" ).change(function () {
+    $( "#data-select option:selected" ).each(function() {
+        var nodeID = {{ node_id }};
+        var nodeNum=$( this ).text();
+        $.get("/iaq/data/"+nodeID+"/query?n="+nodeNum,function(data){
+            data=$.parseJSON(data);
+            $("tbody").empty();
+            $.each(data.data, function(i, item) {  
+                $("#datagrid").append(  
+                    "<tr><td>" + item.temp    + "</td>" +
+					"<td>" + item.humi    + "</td>" +
+					"<td>" + item.iaqengine    + "</td>" +
+					"<td>" + item.tgs2600    + "</td>" +
+                    "<td>" + item.tgs2602 + "</td>"+
+                "<td>" + item.time + "</td></tr>");  
+                }); 
+            });
+        });
+    }).change();
+</script>
+<script>
+$( "#plot-select" ).change(function () {
+    $( "#plot-select option:selected" ).each(function() {
+        var nodeID = {{ node_id }};
+        var nodeNo=$( this ).text();
+        $("#img_history").attr("src","/iaq/plot/"+nodeID+"/query?n="+nodeNo);
+        });
+    }).change();
+</script>
+</body>
+</html>

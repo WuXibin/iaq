@@ -1,0 +1,105 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> <title>室内生态-MICL</title>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/js/jquery.min.js">
+</script>
+<script>
+$(document).ready(function() { 
+	$.get("/iaq/data",function(data){
+		data=$.parseJSON(data);   
+        $.each(data.data, function(i, item) {  
+            $("#datagrid").append(  
+                "<tr><td><a href=\"histories.html?node_id="+item.node_id+"\">" + item.node_id + "</a></td>" +   
+                    "<td>" + item.temp    + "</td>" +
+					"<td>" + item.humi    + "</td>" +
+					"<td>" + item.iaqengine    + "</td>" +
+					"<td>" + item.tgs2600    + "</td>" +
+                    "<td>" + item.tgs2602 + "</td></tr>");  
+        });  
+        });  
+});
+</script>
+<script>
+    $(function(){ 
+    var w = $("#div1").width();//容器宽度 
+    $("#div1 img").each(function(){//如果有很多图片，我们可以使用each()遍历 
+        var img_w = $(this).width();//图片宽度 
+        var img_h = $(this).height();//图片高度 
+        if(img_w>w){//如果图片宽度超出容器宽度--要撑破了 
+            var height = (w*img_h)/img_w; //高度等比缩放 
+            $(this).css({"width":w,"height":height});//设置缩放后的宽度和高度 
+        } 
+    }); 
+});
+</script>
+</head>
+<body>
+<div id="div1" class="main"  width=auto >
+  <div class="header">
+    <div class="header_resize">
+        <div class="nav">
+            <a href="/iaq">首页&nbsp;</a>
+            <a href="data.html">&nbsp;数据查看&nbsp;</a>
+            <a href="nodes.html">&nbsp;设备管理&nbsp;</a>
+        </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="content_resize">
+	           <div class="container_12">
+					<div class="grid_7">
+						<h3>&nbsp;&nbsp;&nbsp;I&nbsp;A&nbsp;Q</h3>
+						<img src="/static/img/0.jpg" alt="" class="img_inner fleft may">
+						<div class="extra_wrapper">
+							<div class="text1">
+								室内空气质量
+							</div>
+							<p class="col1"> IAQ即“室内空气品质”，是Indoor Air Quality的缩写，室内空气质量是指在某个具体的环境内，空气中某些要素对人们生活、工作的适宜程度，它反映了人们的具体要求而形成的一种概念，如何评价室内环境质量是目前为人们所关心的主要问题之一。它包括室内空气的温度、湿度、空气新鲜度和洁净度等情况。 <br></p>
+						</div>
+					</div>
+					<div class="grid_4 prefix_1">
+						<h4>相关技术</h4>
+						<img src="/static/img/3.jpg" alt="" class="img_inner fleft i1 append">
+						<div class="extra_wrapper">
+							<div class="col1_p">
+								电子鼻
+							</div>
+							电子鼻是利用气体传感器阵列的响应图案来识别气味的电子系统，它可以在几小时、几天甚至数月的时间内连续地、实时地监测特定位置的气味状况。
+						</div>
+						<div class="clear cl1"></div>
+						<img src="/static/img/4.gif" alt="" class="img_inner fleft i1 append">
+						<div class="extra_wrapper">
+							<div class="col1_p">
+								气体传感器
+							</div>
+							电子鼻的核心器件是气体传感器。根据原理的不同可将其分为金属氧化物型、电化学型、导电聚合物型、质量型、光离子化型等很多类型。
+						</div>
+						<div class="clear cl2"></div>
+						<img src="/static/img/5.jpg" alt="" class="img_inner fleft i1 append">
+						<div class="extra_wrapper">
+							<div class="col1_p ">
+								污染物气体
+							</div>
+							主要检测的污染物气体包括一氧化碳、二氧化碳、氡、挥发性有机化合物、甲醛、苯等。
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="footer" >
+    <div class="footer_resize">
+      <p class="lf">&copy; Copyright MICL.</p>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
